@@ -30,6 +30,7 @@
 #' system("which samtools") # check that the correct samtools is loaded in the environment
 #' }
 #' @export
+
 module <- function( Arguments ){
 
   # check if arguments are corrext type
@@ -77,3 +78,7 @@ module <- function( Arguments ){
   if (length(rCmds) & !mlstatus){ stop("modulecmd was not successful, mlstatus != TRUE") }
   invisible(mlstatus)
 }
+
+#' @alias module
+#' @export
+ml <- function(...) module(...)
