@@ -45,16 +45,27 @@ module <- function( Arguments ){
 
   moduleCmd <- file.path(Sys.getenv('MODULESHOME'),"bin/modulecmd")
   # check if modulecmd exists
-  if(!file.exists( moduleCmd) ){
+  if (!file.exists(moduleCmd)) {
     stop(moduleCmd," missing!\n",
          "  Module environment not properly set up!" )
   }
 
+  # determine subcommand
+  args              <- gsub(pattern = "\\-+[^\\s]+\\s", replacement = "", x = Arguments[1], perl = TRUE)
+  moduleoperation   <- regmatches(x = args, regexpr("^([^\\s]+)", args, perl = TRUE))
+  cmds_needing_eval <- c("add", "load", "rm", "unload", "purge", "reload", "switch", "swap", "use", "unuse")
+
   # use the shiny interface
-  rCmds <- system(paste(moduleCmd,"r",Arguments), intern = TRUE)
+  rCmds <- system2(moduleCmd, args = c("r", Arguments), stdout = TRUE, stderr = TRUE, timeout = 10)
 
   # execute R commands
-  invisible( eval( parse(text = rCmds) ) )
+  mlstatus <- FALSE
+  if (any(match(x = moduleoperation, table = cmds_needing_eval), na.rm = TRUE)) {
+    invisible( eval( parse(text = rCmds) ) )
+  } else {
+    return(paste(rCmds, collapse = "\n"))
+  }
 
-  if (!mlstatus){ stop("modulecmd was not successful, mlstatus != TRUE") }
+  if (length(rCmds) & !mlstatus){ stop("modulecmd was not successful, mlstatus != TRUE") }
+  invisible(mlstatus)
 }

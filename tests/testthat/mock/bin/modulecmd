@@ -1,9 +1,17 @@
 #!/bin/bash
 
 lang=$1
-command=$2
 shift
+
+while true; do
+  case "$1" in
+  -v | --no-pager ) shift ;;
+  * ) break ;;
+  esac
+done
+command=$1
 shift
+
 
 case "$lang" in
   python)
@@ -113,12 +121,18 @@ run_python_unload ()
 
 case $command in
   list)
+  echo "Currently Loaded Modulefiles:" >&2
+  echo " 1) R/default" >&2
   ;;
   load)
   run_${lang}_load "$@"
   ;;
   unload)
   run_${lang}_unload "$@"
+  ;;
+  --help)
+  echo "Modules Release 9.9.9-mock (2035-01-01)" >&2
+  echo "Usage: module [options] [command] [args ...]" >&2
   ;;
   *)
   ;;

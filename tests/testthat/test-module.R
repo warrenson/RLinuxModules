@@ -23,6 +23,18 @@ test_that("module commands", {
       expect_equivalent(Sys.getenv("PATH"),
                         "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
       expect_true(is.na(Sys.getenv("SAMTOOLS_VERSION", unset = NA)))
+
+      # list works
+      listing <- module("list")
+      expect_equivalent(listing, "Currently Loaded Modulefiles:\n 1) R/default")
+
+      # option parsing too
+      listing <- module("--no-pager list")
+      expect_equivalent(listing, "Currently Loaded Modulefiles:\n 1) R/default")
+
+      # help
+      listing <- module("--help")
+      expect_equivalent(listing, "Modules Release 9.9.9-mock (2035-01-01)\nUsage: module [options] [command] [args ...]")
       })
 })
 

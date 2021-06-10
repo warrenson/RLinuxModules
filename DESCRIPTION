@@ -16,5 +16,6 @@ Encoding: UTF-8
 License: MIT + file LICENSE
 LazyData: TRUE
 Suggests:
-    testthat
-RoxygenNote: 6.1.0
+    testthat,
+    withr
+RoxygenNote: 7.1.1
