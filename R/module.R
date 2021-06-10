@@ -50,23 +50,11 @@ module <- function( Arguments ){
          "  Module environment not properly set up!" )
   }
 
-  # use the python interface
-  pythonCmds <- system(paste(moduleCmd,"python",Arguments),intern=T)
-
-
-  # Check if all python commands are recognizable
-  validPythonCmd <- grepl("os\\.chdir\\('([^']*)'\\)",pythonCmds) |
-                    grepl("os\\.environ\\['([^']*)'] = '([^']*)'",pythonCmds) |
-                    grepl("del os\\.environ\\['([^']*)'\\]",pythonCmds)
-  if( !all(validPythonCmd) ){
-    stop("modulecmd returned unknown command(s):\n", paste(pythonCmds[!validPythonCmd],collapse = "\n"))
-  }
-
-  # convert python commands to R commands
-  RCmds <- sub("os\\.chdir\\('([^']*)'\\)","setwd(dir = '\\1')",pythonCmds,perl=T)
-  RCmds <- sub("os\\.environ\\['([^']*)'] = '([^']*)'","Sys.setenv('\\1' = '\\2')",RCmds,perl=T)
-  RCmds <- sub("del os\\.environ\\['([^']*)'\\]","Sys.unsetenv('\\1')",RCmds,perl=T)
+  # use the shiny interface
+  rCmds <- system(paste(moduleCmd,"r",Arguments), intern = TRUE)
 
   # execute R commands
-  invisible( eval( parse(text = RCmds) ) )
+  invisible( eval( parse(text = rCmds) ) )
+
+  if (!mlstatus){ stop("modulecmd was not successful, mlstatus != TRUE") }
 }

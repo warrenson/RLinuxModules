@@ -1,7 +1,7 @@
 Package: RLinuxModules
 Type: Package
 Title: Interface to the Linux Environment Modules
-Version: 0.3
+Version: 0.4
 Date: 2018-10-18
 Authors@R:
     person(given  = "Lars",
