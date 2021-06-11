@@ -56,7 +56,7 @@ jobs:
       - name: dpkg-reconfigure dash
         if: runner.os == 'Linux'
         run: |
-          echo "dash dash/sh boolean false" | debconf-set-selections
+          echo "dash dash/sh boolean false" | sudo debconf-set-selections
           sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
       - name: Install system dependencies
