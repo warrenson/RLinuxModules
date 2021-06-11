@@ -3,3 +3,6 @@
 language: R
 sudo: false
 cache: packages
+before_install:
+  - echo "dash dash/sh boolean false" | sudo debconf-set-selections
+  - sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash

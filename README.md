@@ -1,23 +1,73 @@
-[![Travis build status](https://travis-ci.org/larsgr/RLinuxModules.svg?branch=master)](https://travis-ci.org/larsgr/RLinuxModules)
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # RLinuxModules
-R package that makes linux [environment modules](http://modules.sourceforge.net/) available from R.
 
-## installation
-```r
-devtools::install_github("larsgr/RLinuxModules")
+<!-- badges: start -->
+
+[![R build
+status](https://github.com/kiwiroy/RLinuxModules/workflows/R-CMD-check-basic/badge.svg)](https://github.com/kiwiroy/RLinuxModules/actions)
+<!-- badges: end -->
+
+R package that makes linux [environment
+modules](http://modules.sourceforge.net/) available from R.
+
+## Installation
+
+<s>You can install the released version of RLinuxModules from
+[CRAN](https://CRAN.R-project.org) with:</s>
+
+``` r
+# Not released to CRAN
+# install.packages("RLinuxModules")
 ```
 
-## use example:
-```r
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("kiwiroy/RLinuxModules@modules-4x")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+``` r
 library(RLinuxModules)
 
-moduleInit( modulesHome = "yourpathToModulesEnvironment")
+# initialise
+moduleInit(modulesHome = modulesHome)
 
-module("load samtools") # loads samtools into the environment
+# load samtools into the environment
+module("load samtools") 
 
-system("samtools") # samtools should now be available (if you have that module)
+# samtools should now be available
+system("samtools", intern = TRUE)
+```
+
+``` bash
+# Environment is inherited in other code chunks.
+which samtools
+```
+
+``` bash
+# see known issues below
+module list
 ```
 
 ## How it works
-The Modules Environment does not support R scripting but does support Python. This package works by using the python support and translating the python commands returned from *modulecmd python* into R commands. It has only been tested for version 3.2.10 
+
+The Modules Environment now supports R scripting since version 4.0.
+<s>This package works by using the python support and translating the
+python commands returned from *modulecmd python* into R commands. It has
+only been tested for version 3.2.10</s>
+
+### Known issues
+
+1.  If `/bin/sh` is symlinked to `/bin/dash`, `dash` will sanitize the
+    environment in such a way that the `module` function is not
+    available to the child `bash` shell. See a [bug
+    report](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=814358)
+    and [Stack Overflow question](https://stackoverflow.com/q/38079864)
+    on the topic.

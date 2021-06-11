@@ -4,3 +4,4 @@
 ^\.Rproj\.user$
 ^tests/testthat/mock/init/\.modulespath$
 ^\.github$
+^README\.Rmd$
