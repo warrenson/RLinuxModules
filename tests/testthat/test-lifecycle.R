@@ -15,6 +15,8 @@ test_that("package lifecycle", {
 
   withr::with_envvar(empty_env,
                      {
+                       expect_true(is.na(version_set <- Sys.getenv("MODULE_VERSION", unset = NA)))
+                       expect_true(is.na(version_set <- Sys.getenv("MODULE_VERSION_STACK", unset = NA)))
                        expect_true(requireNamespace("RLinuxModules"))
                        expect_equivalent(
                          names(RLinuxModules:::.rlinuxmodules),
@@ -29,8 +31,15 @@ test_that("package lifecycle", {
                                          label = "loaded as per environment")
 
                        # initialise and test variables, redundant overall, but required for later tests
-                       moduleInit(modulesHome = modulesHome)
-
+                       withr::with_envvar(c("MODULE_VERSION"=NA, "MODULE_VERSION_STACK"=NA), {
+                         # TODO: resolve why
+                         # devtools::test() vs devtools::check()
+                         # without this protection, MODULE_VERSION and MODULE_VERSION_STACK interfere below
+                         moduleInit(modulesHome = modulesHome)
+                         # I think this protection resets the version vars on leaving this block so
+                         # post_init_vars does not include them.
+                         # Have a feeling devtools::test() is wrong rather than devtools::check()
+                       })
                        post_init_vars <-
                          Sys.getenv(RLinuxModules:::.rlinuxmodules.names, unset = NA)
                        var_names      <-
