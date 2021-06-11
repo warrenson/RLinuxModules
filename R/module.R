@@ -29,8 +29,8 @@
 #' module("load samtools/1.0") # loads a specific version of the module "samtools"
 #' system("which samtools") # check that the correct samtools is loaded in the environment
 #' }
+#' @aliases ml
 #' @export
-
 module <- function( Arguments ){
 
   # check if arguments are corrext type
@@ -79,6 +79,5 @@ module <- function( Arguments ){
   invisible(mlstatus)
 }
 
-#' @alias module
 #' @export
 ml <- function(...) module(...)
