@@ -1,21 +1,24 @@
-Package: RLinuxModules
 Type: Package
+Package: RLinuxModules
 Title: Interface to the Linux Environment Modules
 Version: 0.4
-Date: 2018-10-18
+Date: 2021-06-15
 Authors@R:
-    person(given  = "Lars",
-           family = "Grønvold",
-           role   = c("aut", "cre"),
-           email  = "lagr@nmbu.no")
-Description:
-  Provides access to Linux Environment Modules in R. With RLinuxModules
-  installed, modules can be loaded and unloaded in Rscripts, Rmarkdown
-  documents and Rnotebooks.
-Encoding: UTF-8
+    c(person(given = "Lars",
+             family = "Grønvold",
+             role = c("aut", "cre"),
+             email = "lagr@nmbu.no"),
+      person(given = "Roy",
+             family = "Storey",
+             role = "ctb",
+             email = "roy.storey@plantandfood.co.nz"))
+Description: Provides access to Linux Environment Modules
+    in R. With RLinuxModules installed, modules can be loaded and unloaded
+    in Rscripts, Rmarkdown documents and Rnotebooks.
 License: MIT + file LICENSE
-LazyData: TRUE
 Suggests:
     testthat,
     withr
+Encoding: UTF-8
+LazyData: TRUE
 RoxygenNote: 7.1.1
