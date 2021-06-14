@@ -19,6 +19,12 @@ test_that("module commands", {
                         "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
       expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
 
+      # leading space bug
+      module(" load samtools")
+      expect_equivalent(Sys.getenv("PATH"),
+                        "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+      expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
+
       module("unload samtools")
       expect_equivalent(Sys.getenv("PATH"),
                         "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
@@ -30,6 +36,10 @@ test_that("module commands", {
 
       # option parsing too
       listing <- module("--no-pager list")
+      expect_equivalent(listing, "Currently Loaded Modulefiles:\n 1) R/default")
+
+      # option parsing too with leading space
+      listing <- module(" --no-pager list")
       expect_equivalent(listing, "Currently Loaded Modulefiles:\n 1) R/default")
 
       # help
