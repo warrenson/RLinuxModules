@@ -19,12 +19,6 @@ test_that("module commands", {
                         "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
       expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
 
-      # leading space bug
-      module(" load samtools")
-      expect_equivalent(Sys.getenv("PATH"),
-                        "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
-      expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
-
       module("unload samtools")
       expect_equivalent(Sys.getenv("PATH"),
                         "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
@@ -46,6 +40,38 @@ test_that("module commands", {
       listing <- module("--help")
       expect_equivalent(listing, "Modules Release 9.9.9-mock (2035-01-01)\nUsage: module [options] [command] [args ...]")
       })
+
+  # leading space and around commands
+  withr::with_envvar(empty_env, {
+    moduleInit(modulesHome = modulesHome)
+
+    module(" load samtools")
+    expect_equivalent(Sys.getenv("PATH"),
+                      "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
+
+    module("unload  samtools ")
+    expect_equivalent(Sys.getenv("PATH"),
+                      "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    expect_true(is.na(Sys.getenv("SAMTOOLS_VERSION", unset = NA)))
+  })
+
+  # further space tests - load / unload pairs
+  withr::with_envvar(empty_env, {
+    moduleInit(modulesHome = modulesHome)
+    expect_error(module("            "), "Arguments must be a character vector of non-space")
+
+    module("
+           load samtools   ")
+    expect_equivalent(Sys.getenv("PATH"),
+                      "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
+
+    module("   unload                                 samtools ")
+    expect_equivalent(Sys.getenv("PATH"),
+                      "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    expect_true(is.na(Sys.getenv("SAMTOOLS_VERSION", unset = NA)))
+  })
 })
 
 test_that("module commands in system", {

@@ -37,6 +37,10 @@ module <- function( Arguments ){
     stop("Arguments must be a character vector of length 1")
   }
 
+  if(!grepl(pattern = "\\w+", x = Arguments[1])) {
+    stop("Arguments must be a character vector of non-space")
+  }
+
   # check if module environment has been initialized
   if( is.na(Sys.getenv('MODULESHOME', unset = NA)) ){
     stop("Environment variable MODULESHOME missing!\n",
@@ -56,7 +60,7 @@ module <- function( Arguments ){
   cmds_needing_eval <- c("add", "load", "rm", "unload", "purge", "reload", "switch", "swap", "use", "unuse")
 
   # use the shiny interface
-  rCmds <- system2(moduleCmd, args = c("r", Arguments), stdout = TRUE, stderr = TRUE, timeout = 10)
+  rCmds <- system2(moduleCmd, args = c("r", trimws(Arguments, which = "both")), stdout = TRUE, stderr = TRUE, timeout = 10)
 
   # execute R commands
   mlstatus <- FALSE
