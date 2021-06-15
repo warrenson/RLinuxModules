@@ -63,6 +63,7 @@ shell_has_bash <- function() {
   ## $SHELL is login shell bash - set by all shells
   ## $0 is process name
   ## $BASH is set by bash even when sh is symlinked to bash (/bin/sh rather than /bin/bash)
+  ## This is not enough, dash is sanitizing https://stackoverflow.com/a/38125775
   bash <-
     system("{ which bash >/dev/null && bash -c 'basename ${SHELL:-unset}; basename $0; basename ${BASH:-unset}'; } || echo unset",
            intern = TRUE)
@@ -70,6 +71,7 @@ shell_has_bash <- function() {
 }
 
 # probe the system to discover naming scheme BASH_FUNC_module%% vs BASH_FUNC_module()
+# Section 1.3 https://dwheeler.com/essays/shellshock.html (https://archive.is/odZ4v)
 bash_func_name <- function() {
   ## system() uses sh which is often not linked/copy of bash, but another shell e.g. dash
   name_scheme <- system("bash -c '__r() { : ;}; export -f __r; env | grep ^BASH_FUNC___r'",
