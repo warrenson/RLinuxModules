@@ -131,6 +131,10 @@ case $command in
   load)
   run_${lang}_load "$@"
   ;;
+  purge)
+  run_${lang}_unload samtools
+  echo "purged" >&2
+  ;;
   unload)
   run_${lang}_unload "$@"
   ;;

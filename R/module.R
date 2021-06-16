@@ -65,7 +65,11 @@ module <- function( Arguments ){
   # execute R commands
   mlstatus <- FALSE
   if (any(match(x = moduleoperation, table = cmds_needing_eval), na.rm = TRUE)) {
-    invisible( eval( parse(text = rCmds) ) )
+    moduleCode <- grepl(pattern = "^(Sys\\.|mlstatus)", x = rCmds)
+    invisible( eval( parse(text = rCmds[moduleCode]) ) )
+    if(any(moduleCode == FALSE)) {
+      return(paste(rCmds[-which(moduleCode)], collapse = "\n"))
+    }
   } else {
     return(paste(rCmds, collapse = "\n"))
   }

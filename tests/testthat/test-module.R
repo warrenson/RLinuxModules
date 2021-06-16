@@ -72,6 +72,22 @@ test_that("module commands", {
                       "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
     expect_true(is.na(Sys.getenv("SAMTOOLS_VERSION", unset = NA)))
   })
+
+  # system2 stdout and stderr
+  withr::with_envvar(empty_env, {
+    moduleInit(modulesHome = modulesHome)
+
+    module("load samtools")
+    expect_equivalent(Sys.getenv("PATH"),
+                      "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    expect_equivalent(Sys.getenv("SAMTOOLS_VERSION"), "1.7")
+
+    stderr_captured <- module("purge")
+    expect_equivalent(stderr_captured, "purged")
+    expect_equivalent(Sys.getenv("PATH"),
+                      "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+    expect_true(is.na(Sys.getenv("SAMTOOLS_VERSION", unset = NA)))
+  })
 })
 
 test_that("module commands in system", {
