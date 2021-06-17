@@ -21,7 +21,7 @@ case "$lang" in
   r)
   ;;
   *)
-  echo "$lang needs to be python or bash" >&2
+  echo "$lang needs to be python, bash, or r" >&2
   exit 1;
 esac
 
@@ -120,7 +120,7 @@ run_python_unload ()
 }
 
 case $command in
-  list)
+  list )
   echo "Currently Loaded Modulefiles:" >&2
   if [ -n "$MODULES_COLORS" ]; then
     echo " 1) \[\e[0;31m\]R/default\[\e[0m\]" >&2
@@ -128,21 +128,21 @@ case $command in
     echo " 1) R/default" >&2
   fi
   ;;
-  load)
+  load )
   run_${lang}_load "$@"
   ;;
-  purge)
+  purge )
   run_${lang}_unload samtools
   echo "purged" >&2
   ;;
-  unload)
+  unload )
   run_${lang}_unload "$@"
   ;;
-  --help)
+  -h | --help )
   echo "Modules Release 9.9.9-mock (2035-01-01)" >&2
   echo "Usage: module [options] [command] [args ...]" >&2
   ;;
-  *)
+  * )
   ;;
 esac
 
