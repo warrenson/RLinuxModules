@@ -22,6 +22,10 @@ test_that("module commands", {
       expect_error(module(x=1), "unused argument")
       expect_error(module(""), "Arguments must be a character vector of non-space")
 
+      ## Test alias ml() => module()
+      expect_equal(names(formals("ml")), "...")
+      expect_match(deparse(body("ml")), "module\\(\\.\\.\\.\\)")
+
       module("load samtools")
       expect_equivalent(Sys.getenv("PATH"),
                         "/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
