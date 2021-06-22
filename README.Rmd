@@ -37,11 +37,11 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("kiwiroy/RLinuxModules@modules-4x")
+devtools::install_github("kiwiroy/RLinuxModules@main")
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to solve a common problem when using environment modules with R:
 
 ```{r example}
 library(RLinuxModules)
