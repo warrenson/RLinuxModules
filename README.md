@@ -46,6 +46,8 @@ module("load samtools")
 system("samtools", intern = TRUE)
 ```
 
+While in a knitr code chunk using `bash` as the engine.
+
 ``` bash
 # Environment is inherited in other code chunks.
 which samtools
