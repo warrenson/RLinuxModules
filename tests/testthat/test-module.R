@@ -13,6 +13,18 @@ test_that("module commands", {
     {
       moduleInit(modulesHome = modulesHome)
       expect_error(module(), "argument \"Arguments\" is missing, with no default")
+      expect_error(module(logical(0)), "Arguments must be a character vector of length 1")
+      expect_error(module(numeric(0)), "Arguments must be a character vector of length 1")
+      expect_error(module(single(0)), "Arguments must be a character vector of length 1")
+      expect_error(module(double(0)), "Arguments must be a character vector of length 1")
+      expect_error(module(character(0)), "Arguments must be a character vector of length 1")
+      expect_error(module(complex(0)), "Arguments must be a character vector of length 1")
+      expect_error(module(x=1), "unused argument")
+      expect_error(module(""), "Arguments must be a character vector of non-space")
+
+      ## Test alias ml() => module()
+      expect_equal(names(formals("ml")), "...")
+      expect_match(deparse(body("ml")), "module\\(\\.\\.\\.\\)")
 
       module("load samtools")
       expect_equivalent(Sys.getenv("PATH"),
@@ -37,6 +49,8 @@ test_that("module commands", {
       expect_equivalent(listing, "Currently Loaded Modulefiles:\n 1) R/default")
 
       # help
+      listing <- module("-h")
+      expect_equivalent(listing, "Modules Release 9.9.9-mock (2035-01-01)\nUsage: module [options] [command] [args ...]")
       listing <- module("--help")
       expect_equivalent(listing, "Modules Release 9.9.9-mock (2035-01-01)\nUsage: module [options] [command] [args ...]")
       })

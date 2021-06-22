@@ -29,6 +29,7 @@
 #' module("load samtools/1.0") # loads a specific version of the module "samtools"
 #' system("which samtools") # check that the correct samtools is loaded in the environment
 #' }
+#' @aliases ml
 #' @export
 module <- function( Arguments ){
 
@@ -77,3 +78,6 @@ module <- function( Arguments ){
   if (length(rCmds) & !mlstatus){ stop("modulecmd was not successful, mlstatus != TRUE") }
   invisible(mlstatus)
 }
+
+#' @export
+ml <- function(...) module(...)

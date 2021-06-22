@@ -2,6 +2,7 @@
 % Please edit documentation in R/module.R
 \name{module}
 \alias{module}
+\alias{ml}
 \title{Linux Environment Modules interface}
 \usage{
 module(Arguments)
