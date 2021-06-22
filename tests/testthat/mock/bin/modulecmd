@@ -1,0 +1,148 @@
+#!/bin/bash
+
+lang=$1
+shift
+
+while true; do
+  case "$1" in
+  -v | --no-pager ) shift ;;
+  * ) break ;;
+  esac
+done
+command=$1
+shift
+
+
+case "$lang" in
+  python)
+  ;;
+  bash)
+  ;;
+  r)
+  ;;
+  *)
+  echo "$lang needs to be python or bash" >&2
+  exit 1;
+esac
+
+default_path="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+run_bash_load ()
+{
+  local modules=$1
+  for module in $modules;
+  do
+    if [[ "x$module" == "xsamtools" ]]; then
+      echo "export PATH=\"/genome/samtools/bin:$default_path\""
+      echo "export SAMTOOLS_VERSION=\"1.7\""
+    fi
+  done
+}
+
+run_bash_unload ()
+{
+  local modules=$1
+  for module in $modules;
+  do
+    if [[ "x$module" == "xsamtools" ]]; then
+      echo "export PATH=\"$default_path\""
+      echo "unset SAMTOOLS_VERSION="
+    fi
+  done
+}
+
+run_r_load ()
+{
+  local modules=$1
+  for module in $modules;
+  do
+    if [[ "x$module" == "xsamtools" ]]; then
+      echo "Sys.setenv('_LMFILES_'='/modulespath/samtools/1.7')"
+      echo "Sys.setenv('_LMFILES__modshare'='/modulespath/samtools/1.7')"
+      echo "Sys.setenv('LOADEDMODULES'='samtools/1.7')"
+      echo "Sys.setenv('LOADEDMODULES_modshare'='samtools/1.7:1')"
+      echo "Sys.setenv('MODULES_LMCONFLICT_modshare'='')"
+      echo "Sys.setenv('MODULES_LMCONFLICT'='')"
+      echo "Sys.setenv('MANPATH'='')"
+      echo "Sys.setenv('MANPATH_modshare'='')"
+      echo "Sys.setenv('PATH'='/genome/samtools/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin')"
+      echo "Sys.setenv('PATH_modshare'='/genome/samtools/bin:1:/usr/local/bin:1:/usr/bin:1:/bin:1:/usr/sbin:/sbin:1')"
+      echo "Sys.setenv('SAMTOOLS_VERSION'='1.7')"
+      echo "mlstatus <- TRUE"
+    fi
+  done
+}
+
+run_r_unload ()
+{
+  local modules=$1
+  for module in $modules;
+  do
+    if [[ "x$module" == "xsamtools" ]]; then
+      echo "Sys.setenv('_LMFILES_'='')"
+      echo "Sys.setenv('_LMFILES__modshare'='')"
+      echo "Sys.setenv('LOADEDMODULES'='')"
+      echo "Sys.setenv('LOADEDMODULES_modshare'='')"
+      echo "Sys.setenv('MODULES_LMCONFLICT_modshare'='')"
+      echo "Sys.setenv('MODULES_LMCONFLICT'='')"
+      echo "Sys.setenv('MANPATH'='')"
+      echo "Sys.setenv('MANPATH_modshare'='')"
+      echo "Sys.setenv('PATH'='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin')"
+      echo "Sys.setenv('PATH_modshare'='/usr/local/bin:1:/usr/bin:1:/bin:1:/usr/sbin:/sbin:1')"
+      echo "Sys.unsetenv('SAMTOOLS_VERSION')"
+      echo "mlstatus <- TRUE"
+    fi
+  done
+}
+
+run_python_load ()
+{
+  local modules=$1
+  for module in $modules;
+  do
+    if [[ "x$module" == "xsamtools" ]]; then
+      echo "os.environ['PATH'] = '/genome/samtools/bin:$default_path'"
+      echo "os.environ['SAMTOOLS_VERSION'] = '1.7'"
+    fi
+  done
+}
+
+run_python_unload ()
+{
+  local modules=$1
+  for module in $modules;
+  do
+    if [[ "x$module" == "xsamtools" ]]; then
+      echo "os.environ['PATH'] = '$default_path'"
+      echo "del os.environ['SAMTOOLS_VERSION']"
+    fi
+  done
+}
+
+case $command in
+  list)
+  echo "Currently Loaded Modulefiles:" >&2
+  if [ -n "$MODULES_COLORS" ]; then
+    echo " 1) \[\e[0;31m\]R/default\[\e[0m\]" >&2
+  else
+    echo " 1) R/default" >&2
+  fi
+  ;;
+  load)
+  run_${lang}_load "$@"
+  ;;
+  purge)
+  run_${lang}_unload samtools
+  echo "purged" >&2
+  ;;
+  unload)
+  run_${lang}_unload "$@"
+  ;;
+  --help)
+  echo "Modules Release 9.9.9-mock (2035-01-01)" >&2
+  echo "Usage: module [options] [command] [args ...]" >&2
+  ;;
+  *)
+  ;;
+esac
+

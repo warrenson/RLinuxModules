@@ -4,8 +4,7 @@
 \alias{moduleInit}
 \title{Initialize Environment Modules interface}
 \usage{
-moduleInit(version = "3.2.10",
-  modulesHome = "/local/genome/Modules/3.2.10")
+moduleInit(version = "3.2.10", modulesHome = "/local/genome/Modules/3.2.10")
 }
 \arguments{
 \item{version}{The version of the module system that is installed}
