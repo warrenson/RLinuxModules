@@ -12,7 +12,7 @@ moduleInit <- function( version = '3.2.10',
 
   # Check if modulecmd exists in the bin directory of modulesHome
   module_cmd <- file.path(modulesHome, "bin", "modulecmd")
-  if(!file.exists(module_cmd)){
+  if(!file.exists(module_cmd) && Sys.which("modulecmd") == ""){
     stop(module_cmd, " missing!\n",
          "  Module environment init failed!" )
   }
